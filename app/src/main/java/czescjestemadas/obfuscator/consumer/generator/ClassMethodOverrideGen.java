@@ -23,15 +23,12 @@ public class ClassMethodOverrideGen implements ClassGenerator
 			if (superMethodFullName == null)
 				continue;
 
-			Obfuscator.LOGGER.info("  {} overrides {}", fullName, superMethodFullName);
-
 			final String superMappedName = mappings.getMapping(superMethodFullName);
 
 			if (superMappedName != null)
-			{
-				Obfuscator.LOGGER.info("  {} -> {}", fullName, Mappings.key(node, superMappedName));
 				mappings.setMapping(fullName, superMappedName);
-			}
+
+			Obfuscator.LOGGER.info("  {} overrides {} -> {}", fullName, superMethodFullName, Mappings.key(node, superMappedName));
 		}
 
 		return false;

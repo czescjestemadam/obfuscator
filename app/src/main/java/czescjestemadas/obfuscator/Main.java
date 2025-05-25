@@ -12,11 +12,13 @@ public class Main
 	public static void main(String[] args)
 	{
 		final ObfuscatorSettings settings = ObfuscatorSettings.builder()
+				.namesCharLimit(127)
 				.skippedNames(List.of(
 						"czescjestemadas.kmitems.ItemsPlugin#onLoad"
 				))
 				.build();
 
+		log.info("Generated {} mapping name chars", Mappings.genChars(settings.getNamesCharLimit()));
 		log.info("Obfuscator settings: {}", settings);
 
 		final Obfuscator obf = new Obfuscator(settings);

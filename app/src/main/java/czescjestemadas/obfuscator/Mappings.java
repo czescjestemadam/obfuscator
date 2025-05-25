@@ -1,7 +1,9 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.api.SkipObfuscation;
+import czescjestemadas.obfuscator.util.StrUtil;
 import lombok.ToString;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -16,8 +18,7 @@ import java.util.stream.IntStream;
 @ToString
 public class Mappings
 {
-	private static final int[] NAME_CHARS;
-//	private static final int[] CLASS_NAME_CHARS;
+	private static int[] NAME_CHARS;
 	private static final Random RANDOM = new Random();
 
 	private final Map<String, String> names = new HashMap<>();
@@ -60,6 +61,39 @@ public class Mappings
 	public String getClassMapping(String name)
 	{
 		return classes.get(name);
+	}
+
+	public Type getClassMapping(Type type)
+	{
+		final String className = type.getClassName().replace('.', '/');
+
+		final String mappedSimpleName = classes.get(className);
+		if (mappedSimpleName == null)
+			return null;
+
+		final String packageName = StrUtil.classPackage(className);
+		return Type.getObjectType(packageName + "/" + mappedSimpleName);
+	}
+
+	public Type mapMethodDesc(Type type)
+	{
+		final Type returnType = type.getReturnType();
+		final Type mappedReturnType = getClassMapping(returnType);
+
+		final Type[] argumentTypes = type.getArgumentTypes();
+		for (int i = 0; i < argumentTypes.length; i++)
+		{
+			final Type mappedArgumentType = getClassMapping(argumentTypes[i]);
+			if (mappedArgumentType != null)
+				argumentTypes[i] = mappedArgumentType;
+		}
+
+		final Type mappedType = Type.getMethodType(mappedReturnType != null ? mappedReturnType : returnType, argumentTypes);
+
+		if (type.equals(mappedType))
+			return null;
+
+		return mappedType;
 	}
 
 
@@ -142,16 +176,17 @@ public class Mappings
 		return sb.toString();
 	}
 
-	static
+	public static int genChars(int limit)
 	{
 		final IntStream.Builder chars = IntStream.builder();
 
-		for (int i = Character.MIN_CODE_POINT; i <= Character.MAX_CODE_POINT; i++)
+		for (int i = Character.MIN_CODE_POINT; i <= limit; i++)
 		{
-			if (Character.isJavaIdentifierStart(i))
+			if (Character.isJavaIdentifierStart(i) && !Character.isSurrogate((char)i))
 				chars.accept(i);
 		}
 
 		NAME_CHARS = chars.build().toArray();
+		return NAME_CHARS.length;
 	}
 }

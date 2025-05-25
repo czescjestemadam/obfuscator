@@ -22,6 +22,9 @@ public class ObfuscatorSettings
 
 	// names
 	@Builder.Default
+	private final int namesCharLimit = Character.MAX_CODE_POINT;
+
+	@Builder.Default
 	private final String packageName = "czescjestemadas";
 	@Builder.Default
 	private final int classNameLength = 24;

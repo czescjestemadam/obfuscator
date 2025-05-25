@@ -2,6 +2,7 @@ package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
 import czescjestemadas.obfuscator.consumer.generator.*;
+import czescjestemadas.obfuscator.consumer.transformer.ClassInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
@@ -73,12 +74,6 @@ public class Obfuscator
 			consumers.add(new MethodLocalVarTransform());
 		}
 
-		if (settings.getPackageName() != null)
-			consumers.add(new ClassPackageTransform());
-
-		if (settings.getClassNameLength() > 0)
-			consumers.add(new ClassNameTransform());
-
 		if (settings.getFieldNameLength() > 0)
 		{
 			consumers.add(new ClassFieldTransform());
@@ -89,6 +84,15 @@ public class Obfuscator
 		{
 			consumers.add(new ClassMethodTransform());
 			consumers.add(new MethodInsnTransform());
+		}
+
+		if (settings.getPackageName() != null)
+			consumers.add(new ClassPackageTransform());
+
+		if (settings.getClassNameLength() > 0)
+		{
+			consumers.add(new ClassNameTransform());
+			consumers.add(new ClassInsnTransform());
 		}
 	}
 
@@ -196,7 +200,7 @@ public class Obfuscator
 
 		for (final ClassConsumer consumer : consumers)
 		{
-			LOGGER.info("Running {}...", consumer);
+			LOGGER.info("Running {}...", consumer.getClass().getSimpleName());
 
 			if (!filter.test(consumer))
 				continue;

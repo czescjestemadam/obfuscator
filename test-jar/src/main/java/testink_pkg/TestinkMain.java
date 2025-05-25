@@ -3,6 +3,7 @@ package testink_pkg;
 public class TestinkMain
 {
 	public int num;
+	public TestinkMain testinkMain;
 
 	public TestinkMain()
 	{
@@ -27,6 +28,15 @@ public class TestinkMain
 	public static void printSample(TestinkMain sample)
 	{
 		System.out.println(sample.getNum());
+	}
+
+	public static void multiArg(int i, float f, Object o, TestinkMain t)
+	{
+	}
+
+	public static TestinkMain ret()
+	{
+		return new TestinkMain();
 	}
 
 	public static void main(String[] args)
