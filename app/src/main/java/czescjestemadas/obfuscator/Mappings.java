@@ -90,10 +90,7 @@ public class Mappings
 
 		final Type mappedType = Type.getMethodType(mappedReturnType != null ? mappedReturnType : returnType, argumentTypes);
 
-		if (type.equals(mappedType))
-			return null;
-
-		return mappedType;
+		return type.equals(mappedType) ? null : mappedType;
 	}
 
 
@@ -143,6 +140,30 @@ public class Mappings
 		}
 
 		return null;
+	}
+
+	public static String repackage(String pkg, String className)
+	{
+		final String classSimpleName = StrUtil.classSimpleName(className);
+		return pkg + "/" + classSimpleName;
+	}
+
+	public static Type repackageMethod(String pkg, Type type)
+	{
+		final Type returnType = type.getReturnType();
+		final String returnTypeName = returnType.getClassName().replace('.', '/');
+		final Type mappedReturnType = Type.getType(pkg + '/' + StrUtil.classSimpleName(returnTypeName));
+
+		final Type[] argumentTypes = type.getArgumentTypes();
+		for (int i = 0; i < argumentTypes.length; i++)
+		{
+			final String argumentTypeName = argumentTypes[i].getClassName().replace('.', '/');
+			argumentTypes[i] = Type.getType(pkg + '/' + argumentTypeName);
+		}
+
+		final Type mappedType = Type.getMethodType(mappedReturnType != null ? mappedReturnType : returnType, argumentTypes);
+
+		return type.equals(mappedType) ? null : mappedType;
 	}
 
 	public static boolean isNameIgnored(String name)

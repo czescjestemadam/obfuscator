@@ -4,7 +4,7 @@ public abstract class StrUtil
 {
 	public static String classSimpleName(String name)
 	{
-		return name.substring(name.lastIndexOf('.') + 1);
+		return name.substring(name.lastIndexOf('/') + 1);
 	}
 
 	public static String classPackage(String name)

@@ -86,14 +86,14 @@ public class Obfuscator
 			consumers.add(new MethodInsnTransform());
 		}
 
-		if (settings.getPackageName() != null)
-			consumers.add(new ClassPackageTransform());
-
 		if (settings.getClassNameLength() > 0)
 		{
 			consumers.add(new ClassNameTransform());
 			consumers.add(new ClassInsnTransform());
 		}
+
+		if (settings.getPackageName() != null)
+			consumers.add(new ClassPackageTransform());
 	}
 
 	/**
