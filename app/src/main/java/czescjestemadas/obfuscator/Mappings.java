@@ -57,55 +57,9 @@ public class Mappings
 		return names.get(name);
 	}
 
-	public String getClassMapping(String classDesc)
+	public String getClassMapping(String name)
 	{
-		return classes.get(classDesc);
-	}
-
-	public String getClassMappingOr(String classDesc, String dflt)
-	{
-		return classes.getOrDefault(classDesc, dflt);
-	}
-
-	public String findSuperMethodMapping(ClassNode node, String name, Map<String, ClassNode> classes)
-	{
-		final ClassNode superClassNode = classes.get(node.superName);
-		if (superClassNode != null)
-		{
-			final String methodMapping = findMethodMapping(node, name, superClassNode.methods);
-			if (methodMapping != null)
-				return methodMapping;
-		}
-
-		for (final String anInterface : node.interfaces)
-		{
-			final ClassNode interfaceNode = classes.get(anInterface);
-			if (interfaceNode == null)
-				continue;
-
-			final String methodMapping = findMethodMapping(node, name, interfaceNode.methods);
-			if (methodMapping != null)
-				return methodMapping;
-		}
-
-		return null;
-	}
-
-	private String findMethodMapping(ClassNode node, String name, List<MethodNode> methods)
-	{
-		for (final MethodNode method : methods)
-		{
-			if (!method.name.equals(name))
-				continue;
-
-			final String mappedName = names.get(Mappings.key(node, method));
-			if (mappedName == null)
-				continue;
-
-			return mappedName;
-		}
-
-		return null;
+		return classes.get(name);
 	}
 
 
