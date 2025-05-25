@@ -17,6 +17,11 @@ public interface ClassConsumer
 	boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings);
 
 
+	static Predicate<ClassConsumer> all()
+	{
+		return cc -> true;
+	}
+
 	static Predicate<ClassConsumer> generatorPredicate()
 	{
 		return cc -> cc instanceof ClassGenerator;

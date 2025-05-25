@@ -13,9 +13,7 @@ public class ClassLoadGen implements ClassGenerator
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
-		final String pkg = StrUtil.classPackage(node.name);
-		final String packageName = SkipObfuscation.class.getPackageName();
-		if (pkg.equals(packageName))
+		if (StrUtil.classPackage(node.name).replace('/', '.').equals(SkipObfuscation.class.getPackageName()))
 			return true;
 
 		classes.put(node.name, node);

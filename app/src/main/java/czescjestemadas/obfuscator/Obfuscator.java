@@ -161,15 +161,12 @@ public class Obfuscator
 		for (final JarEntry entry : nodes.keySet())
 			entries.remove(entry);
 
-		// run generators
-		runConsumers(nodes.values(), ClassConsumer.generatorPredicate());
+		// run only generators if mappings only, otherwise run all
+		runConsumers(nodes.values(), output == null ? ClassConsumer.generatorPredicate() : ClassConsumer.all());
 
 		// abort if mappings only
 		if (output == null)
 			return;
-
-		// run transformers
-		runConsumers(nodes.values(), ClassConsumer.transformerPredicate());
 
 		// re-add transformed .class from nodes to main entries
 		for (final ClassNode node : nodes.values())
@@ -206,6 +203,9 @@ public class Obfuscator
 
 			for (final ClassNode node : nodes)
 			{
+				if (ignored.contains(node))
+					continue;
+
 				final boolean ignore = consumer.run(node, classes, mappings, settings);
 				if (ignore)
 				{

@@ -1,7 +1,6 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.api.SkipObfuscation;
-import czescjestemadas.obfuscator.util.StrUtil;
 import lombok.ToString;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -170,7 +169,9 @@ public class Mappings
 
 		for (final AnnotationNode annotation : annotations)
 		{
-			if (StrUtil.classDesc(annotation.desc).equals(SkipObfuscation.class.getName()))
+			if (annotation.desc.substring(1, annotation.desc.length() - 1)
+					.replace('/', '.')
+					.equals(SkipObfuscation.class.getName()))
 				return true;
 		}
 
