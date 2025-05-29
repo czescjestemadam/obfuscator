@@ -2,7 +2,7 @@ package czescjestemadas.obfuscator.consumer;
 
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
-import czescjestemadas.obfuscator.consumer.generator.ClassGenerator;
+import czescjestemadas.obfuscator.consumer.mapper.ClassMapper;
 import czescjestemadas.obfuscator.consumer.transformer.ClassTransformer;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -22,9 +22,9 @@ public interface ClassConsumer
 		return cc -> true;
 	}
 
-	static Predicate<ClassConsumer> generatorPredicate()
+	static Predicate<ClassConsumer> mapperPredicate()
 	{
-		return cc -> cc instanceof ClassGenerator;
+		return cc -> cc instanceof ClassMapper;
 	}
 
 	static Predicate<ClassConsumer> transformerPredicate()

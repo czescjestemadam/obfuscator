@@ -1,7 +1,7 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
-import czescjestemadas.obfuscator.consumer.generator.*;
+import czescjestemadas.obfuscator.consumer.mapper.*;
 import czescjestemadas.obfuscator.consumer.transformer.ClassInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
@@ -44,24 +44,24 @@ public class Obfuscator
 	{
 		this.settings = settings;
 
-		initGenerators();
+		initMappers();
 		initTransformers();
 	}
 
-	private void initGenerators()
+	private void initMappers()
 	{
-		consumers.add(new ClassLoadGen());
+		consumers.add(new ClassLoadMap());
 
 		if (settings.getClassNameLength() > 0)
-			consumers.add(new ClassNameGen());
+			consumers.add(new ClassNameMap());
 
 		if (settings.getFieldNameLength() > 0)
-			consumers.add(new ClassFieldGen());
+			consumers.add(new ClassFieldMap());
 
 		if (settings.getMethodNameLength() > 0)
 		{
-			consumers.add(new ClassMethodGen());
-			consumers.add(new ClassMethodOverrideGen());
+			consumers.add(new ClassMethodMap());
+			consumers.add(new ClassMethodOverrideMap());
 		}
 	}
 
@@ -166,7 +166,7 @@ public class Obfuscator
 			entries.remove(entry);
 
 		// run only generators if mappings only, otherwise run all
-		runConsumers(nodes.values(), output == null ? ClassConsumer.generatorPredicate() : ClassConsumer.all());
+		runConsumers(nodes.values(), output == null ? ClassConsumer.mapperPredicate() : ClassConsumer.all());
 
 		// abort if mappings only
 		if (output == null)

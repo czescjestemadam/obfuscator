@@ -1,13 +1,13 @@
-package czescjestemadas.obfuscator.consumer.generator;
+package czescjestemadas.obfuscator.consumer.mapper;
 
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.Map;
 
-public class ClassFieldGen implements ClassGenerator
+public class ClassMethodMap implements ClassMapper
 {
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
@@ -15,10 +15,10 @@ public class ClassFieldGen implements ClassGenerator
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
-		for (final FieldNode field : node.fields)
+		for (final MethodNode method : node.methods)
 		{
-			if (!Mappings.isSkipAnnotated(field.invisibleAnnotations))
-				mappings.generateMapping(Mappings.key(node, field), settings.getFieldNameLength());
+			if (!Mappings.isNameIgnored(method.name) && !Mappings.isSkipAnnotated(method.invisibleAnnotations))
+				mappings.generateMapping(Mappings.key(node, method), settings.getMethodNameLength());
 		}
 
 		return false;

@@ -1,4 +1,4 @@
-package czescjestemadas.obfuscator.consumer.generator;
+package czescjestemadas.obfuscator.consumer.mapper;
 
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
@@ -8,7 +8,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.util.Map;
 
-public class ClassMethodOverrideGen implements ClassGenerator
+public class ClassMethodOverrideMap implements ClassMapper
 {
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
