@@ -17,8 +17,15 @@ public class ClassFieldMap implements ClassMapper
 
 		for (final FieldNode field : node.fields)
 		{
-			if (!Mappings.isSkipAnnotated(field.invisibleAnnotations))
-				mappings.generateMapping(Mappings.key(node, field), settings.getFieldNameLength());
+			if (Mappings.isSkipAnnotated(field.invisibleAnnotations))
+				continue;
+
+			final String fullName = Mappings.key(node, field);
+
+			if (settings.getSkippedNames().contains(fullName))
+				continue;
+
+			mappings.generateMapping(fullName, settings.getFieldNameLength());
 		}
 
 		return false;

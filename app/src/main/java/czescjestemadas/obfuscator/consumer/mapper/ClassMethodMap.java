@@ -17,8 +17,15 @@ public class ClassMethodMap implements ClassMapper
 
 		for (final MethodNode method : node.methods)
 		{
-			if (!Mappings.isNameIgnored(method.name) && !Mappings.isSkipAnnotated(method.invisibleAnnotations))
-				mappings.generateMapping(Mappings.key(node, method), settings.getMethodNameLength());
+			if (Mappings.isNameIgnored(method.name) || Mappings.isSkipAnnotated(method.invisibleAnnotations))
+				continue;
+
+			final String fullName = Mappings.key(node, method);
+
+			if (settings.getSkippedNames().contains(fullName))
+				continue;
+
+			mappings.generateMapping(fullName, settings.getMethodNameLength());
 		}
 
 		return false;

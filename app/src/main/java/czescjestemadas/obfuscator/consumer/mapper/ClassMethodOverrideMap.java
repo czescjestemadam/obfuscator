@@ -23,6 +23,9 @@ public class ClassMethodOverrideMap implements ClassMapper
 			if (superMethodFullName == null)
 				continue;
 
+			if (settings.getSkippedNames().contains(superMethodFullName))
+				continue;
+
 			final String superMappedName = mappings.getMapping(superMethodFullName);
 
 			if (superMappedName != null)
