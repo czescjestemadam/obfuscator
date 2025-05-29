@@ -1,6 +1,9 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
+import czescjestemadas.obfuscator.consumer.generator.ClassFieldBoolGen;
+import czescjestemadas.obfuscator.consumer.generator.ClassFieldNumberGen;
+import czescjestemadas.obfuscator.consumer.generator.ClassFieldStringGen;
 import czescjestemadas.obfuscator.consumer.mapper.*;
 import czescjestemadas.obfuscator.consumer.transformer.ClassInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
@@ -46,6 +49,7 @@ public class Obfuscator
 
 		initMappers();
 		initTransformers();
+		initGenerators();
 	}
 
 	private void initMappers()
@@ -94,6 +98,18 @@ public class Obfuscator
 
 		if (settings.getPackageName() != null)
 			consumers.add(new ClassPackageTransform());
+	}
+
+	private void initGenerators()
+	{
+		if (settings.isStrings())
+			consumers.add(new ClassFieldStringGen());
+
+		if (settings.isNumbers())
+			consumers.add(new ClassFieldNumberGen());
+
+		if (settings.isBooleans())
+			consumers.add(new ClassFieldBoolGen());
 	}
 
 	/**
