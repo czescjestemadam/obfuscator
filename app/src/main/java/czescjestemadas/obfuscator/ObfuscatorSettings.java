@@ -16,6 +16,7 @@ public class ObfuscatorSettings
 	private final boolean removeDebugInfo = true;
 
 	// values
+	private final boolean inline;
 	private final boolean strings;
 	private final boolean numbers;
 	private final boolean booleans;
@@ -34,4 +35,8 @@ public class ObfuscatorSettings
 	private final int methodNameLength = 32;
 
 	private final List<String> skippedNames;
+
+
+	// code
+	private final boolean junkCodeGen;
 }

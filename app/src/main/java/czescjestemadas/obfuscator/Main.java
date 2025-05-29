@@ -16,6 +16,11 @@ public class Main
 				.skippedNames(List.of(
 						"czescjestemadas.kmitems.ItemsPlugin#onLoad"
 				))
+				.inline(true)
+				.strings(true)
+				.numbers(true)
+				.booleans(true)
+				.junkCodeGen(true)
 				.build();
 
 		log.info("Generated {} mapping name chars", Mappings.genChars(settings.getNamesCharLimit()));
