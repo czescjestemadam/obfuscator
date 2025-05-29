@@ -1,9 +1,7 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
-import czescjestemadas.obfuscator.consumer.generator.ClassFieldBoolGen;
-import czescjestemadas.obfuscator.consumer.generator.ClassFieldNumberGen;
-import czescjestemadas.obfuscator.consumer.generator.ClassFieldStringGen;
+import czescjestemadas.obfuscator.consumer.generator.*;
 import czescjestemadas.obfuscator.consumer.mapper.*;
 import czescjestemadas.obfuscator.consumer.transformer.ClassInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
@@ -27,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -110,6 +109,9 @@ public class Obfuscator
 
 		if (settings.isBooleans())
 			consumers.add(new ClassFieldBoolGen());
+
+		if (settings.isJunkCodeGen())
+			consumers.add(new JunkCodeGen());
 	}
 
 	/**
@@ -181,21 +183,27 @@ public class Obfuscator
 		for (final JarEntry entry : nodes.keySet())
 			entries.remove(entry);
 
+		final List<ClassNode> extraNodes = new ArrayList<>();
+
 		// run only generators if mappings only, otherwise run all
-		runConsumers(nodes.values(), output == null ? ClassConsumer.mapperPredicate() : ClassConsumer.all());
+		runConsumers(nodes.values(), extraNodes, output == null ? ClassConsumer.mapperPredicate() : ClassConsumer.all());
 
 		// abort if mappings only
 		if (output == null)
 			return;
 
-		// re-add transformed .class from nodes to main entries
-		for (final ClassNode node : nodes.values())
-		{
+		final Consumer<ClassNode> nodeCollector = node -> {
 			final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 			node.accept(writer);
 
 			entries.put(new JarEntry(node.name + ".class"), writer.toByteArray());
-		}
+		};
+
+		// re-add transformed .class from nodes to main entries
+		nodes.values().forEach(nodeCollector);
+
+		// add generated extra nodes to main entries
+		extraNodes.forEach(nodeCollector);
 
 		// write everything back to .jar
 		for (final Map.Entry<JarEntry, byte[]> entry : entries.entrySet())
@@ -210,7 +218,7 @@ public class Obfuscator
 		}
 	}
 
-	private void runConsumers(Collection<ClassNode> nodes, Predicate<ClassConsumer> filter)
+	private void runConsumers(Collection<ClassNode> nodes, List<ClassNode> extraNodes, Predicate<ClassConsumer> filter)
 	{
 		final Set<ClassNode> ignored = new HashSet<>();
 
@@ -233,6 +241,9 @@ public class Obfuscator
 						LOGGER.info("Ignoring class {}", node.name);
 				}
 			}
+
+			if (consumer instanceof ClassGenerator classGenerator)
+				extraNodes.addAll(classGenerator.generateNodes());
 		}
 	}
 
