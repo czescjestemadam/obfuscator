@@ -21,6 +21,7 @@ public class Main
 				.numbers(true)
 				.booleans(true)
 				.junkCodeGen(true)
+				.signature("czescjestemadasczescjestemadas\nczescjestemadasczescjestemadas\nczescjestemadasczescjestemadas\nczescjestemadasczescjestemadas\nczescjestemadasczescjestemadas\nczescjestemadasczescjestemadas")
 				.build();
 
 		log.info("Generated {} mapping name chars", Mappings.genChars(settings.getNamesCharLimit()));

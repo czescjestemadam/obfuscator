@@ -39,4 +39,5 @@ public class ObfuscatorSettings
 
 	// code
 	private final boolean junkCodeGen;
+	private final String signature;
 }

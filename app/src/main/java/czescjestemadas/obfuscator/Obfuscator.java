@@ -112,6 +112,9 @@ public class Obfuscator
 
 		if (settings.isJunkCodeGen())
 			consumers.add(new JunkCodeGen());
+
+		if (settings.getSignature() != null)
+			consumers.add(new SignatureGen());
 	}
 
 	/**
