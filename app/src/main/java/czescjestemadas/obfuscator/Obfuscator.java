@@ -254,7 +254,7 @@ public class Obfuscator
 			}
 
 			if (consumer instanceof ClassGenerator classGenerator)
-				extraNodes.addAll(classGenerator.generateNodes());
+				extraNodes.addAll(classGenerator.generateNodes(settings));
 		}
 	}
 

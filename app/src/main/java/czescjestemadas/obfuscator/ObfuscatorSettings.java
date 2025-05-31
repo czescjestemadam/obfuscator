@@ -43,6 +43,20 @@ public class ObfuscatorSettings
 	private final boolean fieldShuffle = true;
 	@Builder.Default
 	private final boolean methodShuffle = true;
+
 	private final boolean junkCodeGen;
+	@Builder.Default
+	private final int junkCodeNodesMin = 32;
+	@Builder.Default
+	private final int junkCodeNodesMax = 64;
+	@Builder.Default
+	private final int junkCodeFieldsMin = 8;
+	@Builder.Default
+	private final int junkCodeFieldsMax = 16;
+	@Builder.Default
+	private final int junkCodeMethodsMin = 16;
+	@Builder.Default
+	private final int junkCodeMethodsMax = 24;
+
 	private final String signature;
 }
