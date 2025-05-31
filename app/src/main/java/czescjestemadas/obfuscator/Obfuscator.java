@@ -9,10 +9,8 @@ import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.ClassFieldTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldInsnTransform;
-import czescjestemadas.obfuscator.consumer.transformer.method.ClassMethodTransform;
-import czescjestemadas.obfuscator.consumer.transformer.method.MethodInsnTransform;
-import czescjestemadas.obfuscator.consumer.transformer.method.MethodLineNumberTransform;
-import czescjestemadas.obfuscator.consumer.transformer.method.MethodLocalVarTransform;
+import czescjestemadas.obfuscator.consumer.transformer.field.FieldShuffleTransform;
+import czescjestemadas.obfuscator.consumer.transformer.method.*;
 import czescjestemadas.obfuscator.util.JarUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -97,6 +95,12 @@ public class Obfuscator
 
 		if (settings.getPackageName() != null)
 			consumers.add(new ClassPackageTransform());
+
+		if (settings.isFieldShuffle())
+			consumers.add(new FieldShuffleTransform());
+
+		if (settings.isMethodShuffle())
+			consumers.add(new MethodShuffleTransform());
 	}
 
 	private void initGenerators()

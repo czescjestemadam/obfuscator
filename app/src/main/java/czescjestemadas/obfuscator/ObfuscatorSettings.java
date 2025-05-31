@@ -38,6 +38,10 @@ public class ObfuscatorSettings
 
 
 	// code
+	@Builder.Default
+	private final boolean fieldShuffle = true;
+	@Builder.Default
+	private final boolean methodShuffle = true;
 	private final boolean junkCodeGen;
 	private final String signature;
 }
