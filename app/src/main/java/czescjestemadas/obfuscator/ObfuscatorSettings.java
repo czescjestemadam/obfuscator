@@ -14,6 +14,7 @@ public class ObfuscatorSettings
 	// remove
 	@Builder.Default
 	private final boolean removeDebugInfo = true;
+	private final boolean fieldFinalRemove;
 
 	// values
 	private final boolean inline;

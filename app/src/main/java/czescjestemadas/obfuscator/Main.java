@@ -16,6 +16,7 @@ public class Main
 				.skippedNames(List.of(
 						"czescjestemadas.kmitems.ItemsPlugin#onLoad"
 				))
+				.fieldFinalRemove(true)
 				.inline(true)
 				.strings(true)
 				.numbers(true)
