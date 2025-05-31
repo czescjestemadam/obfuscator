@@ -20,12 +20,25 @@ public class ClassPackageTransform implements ClassTransformer
 
 		if (node.superName != null)
 		{
-			final String superName = node.superName;
-			node.superName = Mappings.repackage(settings.getPackageName(), node.superName);
-			Obfuscator.LOGGER.info("    super {} -> {}", superName, node.superName);
+			final String superSimpleName = StrUtil.classSimpleName(node.superName);
+			if (mappings.containsMappedClass(superSimpleName))
+			{
+				final String superName = node.superName;
+				node.superName = Mappings.repackage(settings.getPackageName(), node.superName);
+				Obfuscator.LOGGER.info("    super {} -> {}", superName, node.superName);
+			}
 		}
 
-		node.interfaces.replaceAll(s -> Mappings.repackage(settings.getPackageName(), s));
+		node.interfaces.replaceAll(interfaceName -> {
+			final String interfaceSimpleName = StrUtil.classSimpleName(interfaceName);
+
+			if (!mappings.containsMappedClass(interfaceSimpleName))
+				return interfaceName;
+
+			final String repackagedInterface = Mappings.repackage(settings.getPackageName(), interfaceName);
+			Obfuscator.LOGGER.info("    interface {} -> {}", interfaceName, repackagedInterface);
+			return repackagedInterface;
+		});
 
 		for (final MethodNode method : node.methods)
 		{

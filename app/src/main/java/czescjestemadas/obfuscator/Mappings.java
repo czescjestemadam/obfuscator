@@ -93,6 +93,11 @@ public class Mappings
 		return type.equals(mappedType) ? null : mappedType;
 	}
 
+	public boolean containsMappedClass(String mapped)
+	{
+		return classes.containsValue(mapped);
+	}
+
 
 	public static String key(ClassNode node, FieldNode field)
 	{
