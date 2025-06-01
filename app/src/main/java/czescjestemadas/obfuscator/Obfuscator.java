@@ -9,7 +9,6 @@ import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.ClassFieldTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldFinalRemoveTransform;
-import czescjestemadas.obfuscator.consumer.transformer.field.FieldInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldShuffleTransform;
 import czescjestemadas.obfuscator.consumer.transformer.method.*;
 import czescjestemadas.obfuscator.util.JarUtil;
@@ -80,10 +79,7 @@ public class Obfuscator
 			consumers.add(new FieldFinalRemoveTransform());
 
 		if (settings.getFieldNameLength() > 0)
-		{
 			consumers.add(new ClassFieldTransform());
-			consumers.add(new FieldInsnTransform());
-		}
 
 		if (settings.getMethodNameLength() > 0)
 		{

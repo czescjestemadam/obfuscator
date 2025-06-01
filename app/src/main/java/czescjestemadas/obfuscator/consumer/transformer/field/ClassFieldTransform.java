@@ -4,8 +4,7 @@ import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
 import czescjestemadas.obfuscator.consumer.transformer.ClassTransformer;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.Map;
 
@@ -23,6 +22,23 @@ public class ClassFieldTransform implements ClassTransformer
 
 			field.name = mappedName;
 			Obfuscator.LOGGER.info("  {} -> {}", fullName, Mappings.key(node, mappedName));
+		}
+
+		for (final MethodNode method : node.methods)
+		{
+			for (AbstractInsnNode instruction : method.instructions)
+			{
+				if (!(instruction instanceof FieldInsnNode fieldInsnNode))
+					continue;
+
+				final String fullName = Mappings.key(fieldInsnNode.owner, fieldInsnNode.name);
+				final String mappedName = mappings.getMapping(fullName);
+				if (mappedName == null)
+					continue;
+
+				fieldInsnNode.name = mappedName;
+				Obfuscator.LOGGER.info("  INSN {} -> {}", fullName, Mappings.key(fieldInsnNode.owner, mappedName));
+			}
 		}
 
 		return false;
