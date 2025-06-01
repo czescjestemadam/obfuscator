@@ -10,7 +10,10 @@ import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.ClassFieldTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldFinalRemoveTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldShuffleTransform;
-import czescjestemadas.obfuscator.consumer.transformer.method.*;
+import czescjestemadas.obfuscator.consumer.transformer.method.ClassMethodTransform;
+import czescjestemadas.obfuscator.consumer.transformer.method.MethodLineNumberTransform;
+import czescjestemadas.obfuscator.consumer.transformer.method.MethodLocalVarTransform;
+import czescjestemadas.obfuscator.consumer.transformer.method.MethodShuffleTransform;
 import czescjestemadas.obfuscator.util.JarUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -82,10 +85,7 @@ public class Obfuscator
 			consumers.add(new ClassFieldTransform());
 
 		if (settings.getMethodNameLength() > 0)
-		{
 			consumers.add(new ClassMethodTransform());
-			consumers.add(new MethodInsnTransform());
-		}
 
 		if (settings.getClassNameLength() > 0)
 		{
