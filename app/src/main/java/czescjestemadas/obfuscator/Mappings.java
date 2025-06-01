@@ -98,6 +98,12 @@ public class Mappings
 		return classes.containsValue(mapped);
 	}
 
+	public String repackage(String pkg, String className)
+	{
+		final String classSimpleName = StrUtil.classSimpleName(className);
+		return containsMappedClass(classSimpleName) ? pkg + "/" + classSimpleName : null;
+	}
+
 	public Type repackageFieldDesc(String pkg, Type type)
 	{
 		final String typeName = type.getClassName().replace('.', '/');
@@ -175,12 +181,6 @@ public class Mappings
 		}
 
 		return null;
-	}
-
-	public static String repackage(String pkg, String className)
-	{
-		final String classSimpleName = StrUtil.classSimpleName(className);
-		return pkg + "/" + classSimpleName;
 	}
 
 	public static boolean isNameIgnored(String name)

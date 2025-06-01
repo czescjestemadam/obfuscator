@@ -8,34 +8,36 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
 import java.util.Map;
+import java.util.SplittableRandom;
 
 public class ClassPackageTransform implements ClassTransformer
 {
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
-		final String className = node.name;
-		node.name = Mappings.repackage(settings.getPackageName(), node.name);
-		Obfuscator.LOGGER.info("  {} -> {}", className, node.name);
+		final String repackagedClassName = mappings.repackage(settings.getPackageName(), node.name);
+		if (repackagedClassName != null)
+		{
+			Obfuscator.LOGGER.info("  {} -> {}", node.name, repackagedClassName);
+			node.name = repackagedClassName;
+		}
+		else
+			Obfuscator.LOGGER.info("  {}", node.name);
 
 		if (node.superName != null)
 		{
-			final String superSimpleName = StrUtil.classSimpleName(node.superName);
-			if (mappings.containsMappedClass(superSimpleName))
+			final String repackagedSuperName = mappings.repackage(settings.getPackageName(), node.superName);
+			if (repackagedSuperName != null)
 			{
-				final String superName = node.superName;
-				node.superName = Mappings.repackage(settings.getPackageName(), node.superName);
-				Obfuscator.LOGGER.info("    super {} -> {}", superName, node.superName);
+				Obfuscator.LOGGER.info("    super {} -> {}", node.superName, repackagedSuperName);
+				node.superName = repackagedSuperName;
 			}
 		}
 
 		node.interfaces.replaceAll(interfaceName -> {
-			final String interfaceSimpleName = StrUtil.classSimpleName(interfaceName);
-
-			if (!mappings.containsMappedClass(interfaceSimpleName))
+			final String repackagedInterface = mappings.repackage(settings.getPackageName(), interfaceName);
+			if (repackagedInterface == null)
 				return interfaceName;
-
-			final String repackagedInterface = Mappings.repackage(settings.getPackageName(), interfaceName);
 			Obfuscator.LOGGER.info("    interface {} -> {}", interfaceName, repackagedInterface);
 			return repackagedInterface;
 		});
@@ -67,51 +69,47 @@ public class ClassPackageTransform implements ClassTransformer
 			{
 				if (instruction instanceof FieldInsnNode fieldInsnNode)
 				{
-//					final String mappedName = Mappings.repackage(settings.getPackageName(), fieldInsnNode.owner);
-//					if (fieldInsnNode.owner.equals(mappedName))
-//						continue;
-//
-//					Obfuscator.LOGGER.info("    FLD {} -> {}",
-//							Mappings.key(fieldInsnNode.owner, fieldInsnNode.name),
-//							Mappings.key(mappedName, fieldInsnNode.name)
-//					);
-//					fieldInsnNode.owner = mappedName;
+					final String mappedName = mappings.repackage(settings.getPackageName(), fieldInsnNode.owner);
+					if (mappedName == null)
+						continue;
+
+					Obfuscator.LOGGER.info("    INSN FLD {} -> {}",
+							Mappings.key(fieldInsnNode.owner, fieldInsnNode.name),
+							Mappings.key(mappedName, fieldInsnNode.name)
+					);
+					fieldInsnNode.owner = mappedName;
 				}
 				else if (instruction instanceof MethodInsnNode methodInsnNode)
 				{
-//					final String packageName = StrUtil.classPackage(methodInsnNode.owner);
-//					final String mappedSimpleName = mappings.getClassMapping(methodInsnNode.owner);
-//
-//					if (mappedSimpleName != null)
-//					{
-//						final String mappedName = packageName + '/' + mappedSimpleName;
-//						Obfuscator.LOGGER.info("    MTH {} -> {}",
-//								Mappings.key(methodInsnNode.owner, methodInsnNode.name),
-//								Mappings.key(mappedName, methodInsnNode.name)
-//						);
-//						methodInsnNode.owner = mappedName;
-//					}
-//
-//
-//					final Type methodDesc = Type.getMethodType(methodInsnNode.desc);
-//					final Type mappedMethodDesc = mappings.mapMethodDesc(methodDesc);
-//
-//					if (mappedMethodDesc != null)
-//					{
-//						Obfuscator.LOGGER.info("    MTH {} -> {}", methodInsnNode.desc, mappedMethodDesc);
-//						methodInsnNode.desc = mappedMethodDesc.getDescriptor();
-//					}
+					final String repackagedOwner = mappings.repackage(settings.getPackageName(), methodInsnNode.owner);
+					if (repackagedOwner != null)
+					{
+						Obfuscator.LOGGER.info("    INSN MTH OWNR {} -> {}",
+								Mappings.key(methodInsnNode.owner, methodInsnNode.name),
+								Mappings.key(repackagedOwner, methodInsnNode.name)
+						);
+						methodInsnNode.owner = repackagedOwner;
+					}
+
+
+					final Type methodDesc = Type.getMethodType(methodInsnNode.desc);
+					final Type mappedMethodDesc = mappings.mapMethodDesc(methodDesc);
+
+					if (mappedMethodDesc != null)
+					{
+						// todo test
+						Obfuscator.LOGGER.info("    INSN MTH DESC {} -> {}", methodInsnNode.desc, mappedMethodDesc);
+						methodInsnNode.desc = mappedMethodDesc.getDescriptor();
+					}
 				}
 				else if (instruction instanceof TypeInsnNode typeInsnNode)
 				{
-//					final String mappedSimpleName = mappings.getClassMapping(typeInsnNode.desc);
-//					if (mappedSimpleName == null)
-//						continue;
-//
-//					final String mappedName = StrUtil.classPackage(typeInsnNode.desc) + '/' + mappedSimpleName;
-//
-//					Obfuscator.LOGGER.info("    CLS {} -> {}", typeInsnNode.desc, mappedName);
-//					typeInsnNode.desc = mappedName;
+					final String repackagedDesc = mappings.repackage(settings.getPackageName(), typeInsnNode.desc);
+					if (repackagedDesc == null)
+						continue;
+
+					Obfuscator.LOGGER.info("    INSN CLS {} -> {}", typeInsnNode.desc, repackagedDesc);
+					typeInsnNode.desc = repackagedDesc;
 				}
 			}
 		}
