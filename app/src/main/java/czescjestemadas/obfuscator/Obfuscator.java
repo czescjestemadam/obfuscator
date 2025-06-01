@@ -3,7 +3,6 @@ package czescjestemadas.obfuscator;
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
 import czescjestemadas.obfuscator.consumer.generator.*;
 import czescjestemadas.obfuscator.consumer.mapper.*;
-import czescjestemadas.obfuscator.consumer.transformer.ClassInsnTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
 import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
@@ -88,10 +87,7 @@ public class Obfuscator
 			consumers.add(new ClassMethodTransform());
 
 		if (settings.getClassNameLength() > 0)
-		{
 			consumers.add(new ClassNameTransform());
-			consumers.add(new ClassInsnTransform());
-		}
 
 		if (settings.getPackageName() != null)
 			consumers.add(new ClassPackageTransform());
