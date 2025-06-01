@@ -63,6 +63,24 @@ public class ClassNameTransform implements ClassTransformer
 			node.interfaces.set(i, mappedInterfaceName);
 		}
 
+		for (final FieldNode field : node.fields)
+		{
+			final Type type = Type.getType(field.desc);
+			final Type mappedType = mappings.getClassMapping(type);
+
+			if (mappedType == null)
+				continue;
+
+			if (showHeader)
+			{
+				Obfuscator.LOGGER.info("  {}", node.name);
+				showHeader = false;
+			}
+
+			Obfuscator.LOGGER.info("    FLD {} -> {}", type, mappedType);
+			field.desc = mappedType.getDescriptor();
+		}
+
 		runInsn(node, classes, mappings, settings);
 
 		return false;
@@ -92,7 +110,7 @@ public class ClassNameTransform implements ClassTransformer
 						continue;
 
 					final String mappedName = packageName + '/' + mappedSimpleName;
-					Obfuscator.LOGGER.info("    FLD {} -> {}",
+					Obfuscator.LOGGER.info("    INSN FLD {} -> {}",
 							Mappings.key(fieldInsnNode.owner, fieldInsnNode.name),
 							Mappings.key(mappedName, fieldInsnNode.name)
 					);
@@ -106,7 +124,7 @@ public class ClassNameTransform implements ClassTransformer
 					if (mappedSimpleName != null)
 					{
 						final String mappedName = packageName + '/' + mappedSimpleName;
-						Obfuscator.LOGGER.info("    MTH {} -> {}",
+						Obfuscator.LOGGER.info("    INSN MTH {} -> {}",
 								Mappings.key(methodInsnNode.owner, methodInsnNode.name),
 								Mappings.key(mappedName, methodInsnNode.name)
 						);
@@ -119,7 +137,7 @@ public class ClassNameTransform implements ClassTransformer
 
 					if (mappedMethodDesc != null)
 					{
-						Obfuscator.LOGGER.info("    MTH {} -> {}", methodInsnNode.desc, mappedMethodDesc);
+						Obfuscator.LOGGER.info("    INSN MTH {} -> {}", methodInsnNode.desc, mappedMethodDesc);
 						methodInsnNode.desc = mappedMethodDesc.getDescriptor();
 					}
 				}
@@ -131,7 +149,7 @@ public class ClassNameTransform implements ClassTransformer
 
 					final String mappedName = StrUtil.classPackage(typeInsnNode.desc) + '/' + mappedSimpleName;
 
-					Obfuscator.LOGGER.info("    CLS {} -> {}", typeInsnNode.desc, mappedName);
+					Obfuscator.LOGGER.info("    INSN CLS {} -> {}", typeInsnNode.desc, mappedName);
 					typeInsnNode.desc = mappedName;
 				}
 			}
