@@ -20,11 +20,11 @@ public class ClassMethodTransform implements ClassTransformer
 		{
 			final String fullName = Mappings.key(node, method);
 			final String mappedName = mappings.getMapping(fullName);
-			if (mappedName == null)
-				continue;
-
-			method.name = mappedName;
-			Obfuscator.LOGGER.info("  {} -> {}", fullName, Mappings.key(node, mappedName));
+			if (mappedName != null)
+			{
+				method.name = mappedName;
+				Obfuscator.LOGGER.info("  {} -> {}", fullName, Mappings.key(node, mappedName));
+			}
 
 			for (final AbstractInsnNode instruction : method.instructions)
 			{
