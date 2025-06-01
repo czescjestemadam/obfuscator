@@ -14,7 +14,7 @@ public class MethodShuffleTransform implements ClassTransformer
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
-		if (node.methods.size() > 1)
+		if (node.methods.size() < 2)
 			return false;
 
 		Collections.shuffle(node.methods);
