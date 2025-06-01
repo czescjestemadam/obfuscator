@@ -98,6 +98,36 @@ public class Mappings
 		return classes.containsValue(mapped);
 	}
 
+	public Type repackageFieldDesc(String pkg, Type type)
+	{
+		final String typeName = type.getClassName().replace('.', '/');
+		final String typeSimpleName = StrUtil.classSimpleName(typeName);
+		return containsMappedClass(typeSimpleName) ? Type.getType('L' + pkg + '/' + typeSimpleName + ';') : null;
+	}
+
+	public Type repackageMethodDesc(String pkg, Type type)
+	{
+		final Type returnType = type.getReturnType();
+		final String returnTypeName = returnType.getClassName().replace('.', '/');
+		final String returnTypeSimpleName = StrUtil.classSimpleName(returnTypeName);
+		final Type mappedReturnType = containsMappedClass(returnTypeSimpleName) ?
+				Type.getType('L' + pkg + '/' + returnTypeSimpleName + ';') :
+				null;
+
+		final Type[] argumentTypes = type.getArgumentTypes();
+		for (int i = 0; i < argumentTypes.length; i++)
+		{
+			final String argumentTypeName = argumentTypes[i].getClassName().replace('.', '/');
+			final String argumentTypeSimpleName = StrUtil.classSimpleName(argumentTypeName);
+			if (containsMappedClass(argumentTypeSimpleName))
+				argumentTypes[i] = Type.getType('L' + pkg + '/' + argumentTypeSimpleName + ';');
+		}
+
+		final Type mappedType = Type.getMethodType(mappedReturnType != null ? mappedReturnType : returnType, argumentTypes);
+
+		return type.equals(mappedType) ? null : mappedType;
+	}
+
 
 	public static String key(ClassNode node, FieldNode field)
 	{
@@ -151,24 +181,6 @@ public class Mappings
 	{
 		final String classSimpleName = StrUtil.classSimpleName(className);
 		return pkg + "/" + classSimpleName;
-	}
-
-	public static Type repackageMethod(String pkg, Type type)
-	{
-		final Type returnType = type.getReturnType();
-		final String returnTypeName = returnType.getClassName().replace('.', '/');
-		final Type mappedReturnType = Type.getType(pkg + '/' + StrUtil.classSimpleName(returnTypeName));
-
-		final Type[] argumentTypes = type.getArgumentTypes();
-		for (int i = 0; i < argumentTypes.length; i++)
-		{
-			final String argumentTypeName = argumentTypes[i].getClassName().replace('.', '/');
-			argumentTypes[i] = Type.getType(pkg + '/' + argumentTypeName);
-		}
-
-		final Type mappedType = Type.getMethodType(mappedReturnType != null ? mappedReturnType : returnType, argumentTypes);
-
-		return type.equals(mappedType) ? null : mappedType;
 	}
 
 	public static boolean isNameIgnored(String name)

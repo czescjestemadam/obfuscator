@@ -40,15 +40,27 @@ public class ClassPackageTransform implements ClassTransformer
 			return repackagedInterface;
 		});
 
+		for (final FieldNode field : node.fields)
+		{
+			final Type type = Type.getType(field.desc);
+			final Type repackagedType = mappings.repackageFieldDesc(settings.getPackageName(), type);
+
+			if (repackagedType == null)
+				continue;
+
+			Obfuscator.LOGGER.info("    FLD {} -> {}", type, repackagedType);
+			field.desc = repackagedType.getDescriptor();
+		}
+
 		for (final MethodNode method : node.methods)
 		{
 			final Type type = Type.getType(method.desc);
-			final Type mappedType = mappings.mapMethodDesc(type);
+			final Type repackagedType = mappings.repackageMethodDesc(settings.getPackageName(), type);
 
-			if (mappedType != null)
+			if (repackagedType != null)
 			{
-				Obfuscator.LOGGER.info("    DSC {} -> {}", type, mappedType);
-				method.desc = mappedType.getDescriptor();
+				Obfuscator.LOGGER.info("    MTH {} -> {}", type, repackagedType);
+				method.desc = repackagedType.getDescriptor();
 			}
 
 			for (final AbstractInsnNode instruction : method.instructions)
