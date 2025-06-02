@@ -3,9 +3,7 @@ package czescjestemadas.obfuscator;
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
 import czescjestemadas.obfuscator.consumer.generator.*;
 import czescjestemadas.obfuscator.consumer.mapper.*;
-import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
-import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
-import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
+import czescjestemadas.obfuscator.consumer.transformer.*;
 import czescjestemadas.obfuscator.consumer.transformer.field.ClassFieldTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldFinalRemoveTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldShuffleTransform;
@@ -13,6 +11,10 @@ import czescjestemadas.obfuscator.consumer.transformer.method.ClassMethodTransfo
 import czescjestemadas.obfuscator.consumer.transformer.method.MethodLineNumberTransform;
 import czescjestemadas.obfuscator.consumer.transformer.method.MethodLocalVarTransform;
 import czescjestemadas.obfuscator.consumer.transformer.method.MethodShuffleTransform;
+import czescjestemadas.obfuscator.consumer.transformer.value.ValueBoolTransform;
+import czescjestemadas.obfuscator.consumer.transformer.value.ValueInlineTransform;
+import czescjestemadas.obfuscator.consumer.transformer.value.ValueNumberTransform;
+import czescjestemadas.obfuscator.consumer.transformer.value.ValueStringTransform;
 import czescjestemadas.obfuscator.util.JarUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -80,6 +82,18 @@ public class Obfuscator
 		if (settings.isFieldFinalRemove())
 			consumers.add(new FieldFinalRemoveTransform());
 
+		if (settings.isInline())
+			consumers.add(new ValueInlineTransform());
+
+		if (settings.isStrings())
+			consumers.add(new ValueStringTransform());
+
+		if (settings.isNumbers())
+			consumers.add(new ValueNumberTransform());
+
+		if (settings.isBooleans())
+			consumers.add(new ValueBoolTransform());
+
 		if (settings.getFieldNameLength() > 0)
 			consumers.add(new ClassFieldTransform());
 
@@ -101,15 +115,6 @@ public class Obfuscator
 
 	private void initGenerators()
 	{
-		if (settings.isStrings())
-			consumers.add(new ClassFieldStringGen());
-
-		if (settings.isNumbers())
-			consumers.add(new ClassFieldNumberGen());
-
-		if (settings.isBooleans())
-			consumers.add(new ClassFieldBoolGen());
-
 		if (settings.isJunkCodeGen())
 			consumers.add(new JunkCodeGen());
 
