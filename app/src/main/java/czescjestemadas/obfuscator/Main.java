@@ -36,10 +36,15 @@ public class Main
 
 		final Obfuscator obf = new Obfuscator(settings);
 
-		final Path outputFile = Path.of("run/out/obfuscator-test-jar.jar");
-		clearDirOf(outputFile);
+		clearDir(new File("run/out/"));
+
+		final Path outputFile = Path.of("run/out/obf/obfuscator-test-jar.jar");
 		obf.obfuscate(new File("test-jar/target/obfuscator-test-jar-0.1.jar"), outputFile);
 		extractJar(outputFile);
+
+//		final Path outputFile2 = Path.of("run/out/apl/AdasPluginLib.jar");
+//		obf.obfuscate(new File("run/AdasPluginLib.jar"), outputFile2);
+//		extractJar(outputFile2);
 	}
 
 	private static void extractJar(Path jarPath)
@@ -67,11 +72,6 @@ public class Main
 		{
 			throw new RuntimeException(e);
 		}
-	}
-
-	private static void clearDirOf(Path outputFile)
-	{
-		clearDir(outputFile.getParent().toFile());
 	}
 
 	private static void clearDir(File dir)
