@@ -146,6 +146,9 @@ public class Obfuscator
 
 		if (filename.endsWith(".jar"))
 		{
+			if (outputFile != null)
+				outputFile.getParent().toFile().mkdirs();
+
 			try (final JarFile jar = new JarFile(file);
 				 final JarOutputStream output = outputFile != null ? new JarOutputStream(Files.newOutputStream(outputFile)) : null)
 			{
