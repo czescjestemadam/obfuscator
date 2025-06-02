@@ -9,6 +9,7 @@ public abstract class StrUtil
 
 	public static String classPackage(String name)
 	{
-		return name.substring(0, name.lastIndexOf('/'));
+		final int idx = name.lastIndexOf('/');
+		return idx < 0 ? name : name.substring(0, idx);
 	}
 }
