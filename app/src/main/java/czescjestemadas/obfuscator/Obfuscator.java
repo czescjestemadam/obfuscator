@@ -36,7 +36,7 @@ import java.util.jar.JarOutputStream;
 public class Obfuscator
 {
 	public static final Logger LOGGER = LoggerFactory.getLogger(Obfuscator.class);
-	
+
 	private final Map<String, ClassNode> classes = new HashMap<>();
 	private final Mappings mappings = new Mappings();
 
@@ -204,7 +204,9 @@ public class Obfuscator
 			return;
 
 		final Consumer<ClassNode> nodeCollector = node -> {
-			final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+			final ClassWriter writer = new ClassWriter(
+					mappings.getClassMapping(node.name) != null ? ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES : 0
+			);
 			node.accept(writer);
 
 			entries.put(new JarEntry(node.name + ".class"), writer.toByteArray());
