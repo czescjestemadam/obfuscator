@@ -33,6 +33,9 @@ public class JunkCodeGen implements ClassGenerator
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
+		if (settings.getSkippedNames().contains(node.name))
+			return false;
+
 		appendGeneratedElements(node, settings);
 
 		return false;

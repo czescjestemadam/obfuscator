@@ -15,6 +15,9 @@ public class FieldFinalRemoveTransform implements ClassTransformer
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
+		if (settings.getSkippedNames().contains(node.name))
+			return false;
+
 		for (FieldNode field : node.fields)
 		{
 			if ((field.access & Opcodes.ACC_FINAL) <= 0)

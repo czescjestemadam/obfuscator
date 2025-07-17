@@ -14,6 +14,9 @@ public class SignatureGen implements ClassGenerator
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
+		if (settings.getSkippedNames().contains(node.name))
+			return false;
+
 		final String[] lines = settings.getSignature().split("\\n");
 
 		final MethodNode method = new MethodNode(

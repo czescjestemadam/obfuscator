@@ -14,6 +14,9 @@ public class FieldShuffleTransform implements ClassTransformer
 	@Override
 	public boolean run(ClassNode node, Map<String, ClassNode> classes, Mappings mappings, ObfuscatorSettings settings)
 	{
+		if (settings.getSkippedNames().contains(node.name))
+			return false;
+
 		if (node.fields.size() < 2)
 			return false;
 
