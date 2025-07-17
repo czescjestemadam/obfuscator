@@ -50,12 +50,12 @@ public class Main
 
 		try
 		{
-			final Map<JarEntry, byte[]> entries = JarUtil.read(new JarFile(jarPath.toFile()));
+			final Map<String, byte[]> entries = JarUtil.read(new JarFile(jarPath.toFile()));
 
-			entries.forEach((entry, bytes) -> {
+			entries.forEach((entryName, bytes) -> {
 				try
 				{
-					final Path path = jarDir.resolve(entry.getName());
+					final Path path = jarDir.resolve(entryName);
 					path.getParent().toFile().mkdirs();
 					Files.write(path, bytes);
 				}

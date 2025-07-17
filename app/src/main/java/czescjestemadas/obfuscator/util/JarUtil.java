@@ -14,9 +14,9 @@ import java.util.jar.JarOutputStream;
 @Slf4j
 public abstract class JarUtil
 {
-	public static Map<JarEntry, byte[]> read(JarFile jar)
+	public static Map<String, byte[]> read(JarFile jar)
 	{
-		final Map<JarEntry, byte[]> entries = new HashMap<>();
+		final Map<String, byte[]> entries = new HashMap<>();
 
 		final Enumeration<JarEntry> jarEntryEnumeration = jar.entries();
 		while (jarEntryEnumeration.hasMoreElements())
@@ -28,7 +28,7 @@ public abstract class JarUtil
 
 			try (final InputStream inputStream = jar.getInputStream(entry))
 			{
-				entries.put(entry, inputStream.readAllBytes());
+				entries.put(entry.getName(), inputStream.readAllBytes());
 			}
 			catch (IOException e)
 			{

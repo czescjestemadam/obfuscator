@@ -170,28 +170,28 @@ public class Obfuscator
 
 	private void obfuscateJar(JarFile jar, JarOutputStream output) throws IOException
 	{
-		final Map<JarEntry, byte[]> entries = JarUtil.read(jar);
+		final Map<String, byte[]> entries = JarUtil.read(jar);
 
-		final Map<JarEntry, ClassNode> nodes = new HashMap<>();
+		final Map<String, ClassNode> nodes = new HashMap<>();
 
 		// add .class to nodes
-		for (final Map.Entry<JarEntry, byte[]> entry : entries.entrySet())
+		for (final Map.Entry<String, byte[]> entry : entries.entrySet())
 		{
-			final JarEntry jarEntry = entry.getKey();
+			final String jarEntryName = entry.getKey();
 			final byte[] bytes = entry.getValue();
 
-			if (!jarEntry.getName().endsWith(".class"))
+			if (!jarEntryName.endsWith(".class"))
 				continue;
 
 			final ClassNode node = new ClassNode();
 			final ClassReader reader = new ClassReader(bytes);
 			reader.accept(node, 0);
 
-			nodes.put(jarEntry, node);
+			nodes.put(jarEntryName, node);
 		}
 
 		// clear .class from main entries
-		for (final JarEntry entry : nodes.keySet())
+		for (final String entry : nodes.keySet())
 			entries.remove(entry);
 
 		final List<ClassNode> extraNodes = new ArrayList<>();
@@ -209,7 +209,7 @@ public class Obfuscator
 			);
 			node.accept(writer);
 
-			entries.put(new JarEntry(node.name + ".class"), writer.toByteArray());
+			entries.put(node.name + ".class", writer.toByteArray());
 		};
 
 		// re-add transformed .class from nodes to main entries
@@ -219,15 +219,13 @@ public class Obfuscator
 		extraNodes.forEach(nodeCollector);
 
 		// write everything back to .jar
-		for (final Map.Entry<JarEntry, byte[]> entry : entries.entrySet())
+		for (final Map.Entry<String, byte[]> entry : entries.entrySet())
 		{
-			final JarEntry jarEntry = entry.getKey();
+			final String jarEntryName = entry.getKey();
 			final byte[] bytes = entry.getValue();
 
-			if (jarEntry.getName().equals("plugin.yml"))
-				JarUtil.writeEntry(output, jarEntry, obfuscatePluginYml(new String(bytes)).getBytes());
-			else
-				JarUtil.writeEntry(output, jarEntry, bytes);
+			final byte[] transformedBytes = jarEntryName.equals("plugin.yml") ? obfuscatePluginYml(new String(bytes)).getBytes() : bytes;
+			JarUtil.writeEntry(output, new JarEntry(jarEntryName), transformedBytes);
 		}
 	}
 
