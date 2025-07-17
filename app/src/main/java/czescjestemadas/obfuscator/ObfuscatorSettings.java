@@ -38,6 +38,8 @@ public class ObfuscatorSettings
 
 	@Singular
 	private final List<String> skippedNames;
+	@Singular
+	private final List<String> packagePrefixes;
 
 
 	// code

@@ -15,6 +15,9 @@ public class ClassFieldMap implements ClassMapper
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		for (final FieldNode field : node.fields)
 		{
 			if (Mappings.isSkipAnnotated(field.invisibleAnnotations))

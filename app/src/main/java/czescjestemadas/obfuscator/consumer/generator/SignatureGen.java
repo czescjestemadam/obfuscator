@@ -17,6 +17,9 @@ public class SignatureGen implements ClassGenerator
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		final String[] lines = settings.getSignature().split("\\n");
 
 		final MethodNode method = new MethodNode(

@@ -16,6 +16,9 @@ public class ClassMethodOverrideMap implements ClassMapper
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		for (final MethodNode method : node.methods)
 		{
 			final String fullName = Mappings.key(node, method);

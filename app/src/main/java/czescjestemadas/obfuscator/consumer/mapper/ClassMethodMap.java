@@ -15,6 +15,9 @@ public class ClassMethodMap implements ClassMapper
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		for (final MethodNode method : node.methods)
 		{
 			if (Mappings.isNameIgnored(method.name) || Mappings.isSkipAnnotated(method.invisibleAnnotations))

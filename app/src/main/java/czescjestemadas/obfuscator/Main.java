@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @Slf4j
@@ -19,6 +18,7 @@ public class Main
 		final ObfuscatorSettings settings = ObfuscatorSettings.builder()
 				.namesCharLimit(127)
 				.skippedName("czescjestemadas.kmitems.ItemsPlugin#onLoad")
+				.packagePrefix("czescjestemadas.")
 				.fieldFinalRemove(true)
 				.inline(true)
 				.strings(true)
@@ -35,9 +35,13 @@ public class Main
 
 		clearDir(new File("run/out/"));
 
-		final Path outputFile = Path.of("run/out/obf/obfuscator-test-jar.jar");
-		obf.obfuscate(new File("test-jar/target/obfuscator-test-jar-0.1.jar"), outputFile);
-		extractJar(outputFile);
+//		final Path outputFile = Path.of("run/out/obf/obfuscator-test-jar.jar");
+//		obf.obfuscate(new File("test-jar/target/obfuscator-test-jar-0.1.jar"), outputFile);
+//		extractJar(outputFile);
+
+		final Path pacOutputFile = Path.of("/home/adas/srv/plugin/ProjectAC-0.1.jar");
+		obf.obfuscate(new File("/home/adas/Programming/krystal/ProjectAC/build/libs/ProjectAC-0.1.jar"), pacOutputFile);
+//		extractJar(pacOutputFile);
 
 //		final Path outputFile2 = Path.of("run/out/apl/AdasPluginLib.jar");
 //		obf.obfuscate(new File("run/AdasPluginLib.jar"), outputFile2);

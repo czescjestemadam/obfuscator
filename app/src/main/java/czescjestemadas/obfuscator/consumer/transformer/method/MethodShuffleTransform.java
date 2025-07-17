@@ -17,6 +17,9 @@ public class MethodShuffleTransform implements ClassTransformer
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		if (node.methods.size() < 2)
 			return false;
 

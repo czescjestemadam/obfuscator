@@ -36,6 +36,9 @@ public class JunkCodeGen implements ClassGenerator
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		appendGeneratedElements(node, settings);
 
 		return false;

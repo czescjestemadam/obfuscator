@@ -17,6 +17,9 @@ public class ClassNameMap implements ClassMapper
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		mappings.generateClassMapping(node.name, settings.getClassNameLength());
 
 		return false;

@@ -18,6 +18,9 @@ public class FieldFinalRemoveTransform implements ClassTransformer
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
+		if (!settings.getPackagePrefixes().contains(node.name))
+			return false;
+
 		for (FieldNode field : node.fields)
 		{
 			if ((field.access & Opcodes.ACC_FINAL) <= 0)
