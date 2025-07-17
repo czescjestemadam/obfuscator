@@ -20,6 +20,7 @@ import czescjestemadas.obfuscator.consumer.transformer.value.ValueInlineTransfor
 import czescjestemadas.obfuscator.consumer.transformer.value.ValueNumberTransform;
 import czescjestemadas.obfuscator.consumer.transformer.value.ValueStringTransform;
 import czescjestemadas.obfuscator.util.JarUtil;
+import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -266,23 +267,32 @@ public class Obfuscator
 	private String obfuscatePluginYml(String str)
 	{
 		LOGGER.info("Obfuscating plugin.yml");
+		final String MAIN_PREFIX = "main: ";
 
 		final String[] lines = str.split("\\n");
 
 		for (int i = 0; i < lines.length; i++)
 		{
-			if (lines[i].startsWith("main: "))
+			if (lines[i].startsWith(MAIN_PREFIX))
 			{
-				final String mainClass = lines[i].substring(6);
-				final String mappedMainClass = mappings.getClassMapping(mainClass);
-				if (mappedMainClass == null)
-					break;
+				final String line = lines[i];
+				String mainClass = line.substring(MAIN_PREFIX.length()).replace('.', '/');
 
-				lines[i] = "main: " + mappedMainClass;
+				if (settings.getClassNameLength() > 0)
+				{
+					final String mainPackage = StrUtil.classPackage(mainClass);
+					final String mappedMainClass = mappings.getClassMapping(mainClass);
+
+					mainClass = mainPackage + '/' + mappedMainClass;
+				}
+
+				if (settings.getPackageName() != null)
+					mainClass = mappings.repackage(settings.getPackageName(), mainClass);
+
+				lines[i] = MAIN_PREFIX + mainClass.replace('/', '.');
+				LOGGER.info("  {} -> {}", line, lines[i]);
 				break;
 			}
-
-			LOGGER.info("  {}", lines[i]);
 		}
 
 		return String.join("\n", lines);
