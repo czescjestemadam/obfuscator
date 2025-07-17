@@ -1,9 +1,13 @@
 package czescjestemadas.obfuscator;
 
 import czescjestemadas.obfuscator.consumer.ClassConsumer;
-import czescjestemadas.obfuscator.consumer.generator.*;
+import czescjestemadas.obfuscator.consumer.generator.ClassGenerator;
+import czescjestemadas.obfuscator.consumer.generator.JunkCodeGen;
+import czescjestemadas.obfuscator.consumer.generator.SignatureGen;
 import czescjestemadas.obfuscator.consumer.mapper.*;
-import czescjestemadas.obfuscator.consumer.transformer.*;
+import czescjestemadas.obfuscator.consumer.transformer.ClassNameTransform;
+import czescjestemadas.obfuscator.consumer.transformer.ClassPackageTransform;
+import czescjestemadas.obfuscator.consumer.transformer.ClassSourceTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.ClassFieldTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldFinalRemoveTransform;
 import czescjestemadas.obfuscator.consumer.transformer.field.FieldShuffleTransform;
@@ -124,7 +128,8 @@ public class Obfuscator
 
 	/**
 	 * Generates mappings and obfuscates file when {@code outputFile != null}
-	 * @param file input file
+	 *
+	 * @param file       input file
 	 * @param outputFile output file path, when {@code null} generates mappings only
 	 */
 	public void obfuscate(File file, Path outputFile)

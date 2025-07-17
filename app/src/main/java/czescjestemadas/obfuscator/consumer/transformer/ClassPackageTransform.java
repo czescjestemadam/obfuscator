@@ -3,12 +3,10 @@ package czescjestemadas.obfuscator.consumer.transformer;
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
-import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
 import java.util.Map;
-import java.util.SplittableRandom;
 
 public class ClassPackageTransform implements ClassTransformer
 {
