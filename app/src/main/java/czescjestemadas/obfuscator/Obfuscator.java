@@ -265,6 +265,8 @@ public class Obfuscator
 
 	private String obfuscatePluginYml(String str)
 	{
+		LOGGER.info("Obfuscating plugin.yml");
+
 		final String[] lines = str.split("\\n");
 
 		for (int i = 0; i < lines.length; i++)
