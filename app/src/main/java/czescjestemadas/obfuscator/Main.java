@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -19,9 +18,7 @@ public class Main
 	{
 		final ObfuscatorSettings settings = ObfuscatorSettings.builder()
 				.namesCharLimit(127)
-				.skippedNames(List.of(
-						"czescjestemadas.kmitems.ItemsPlugin#onLoad"
-				))
+				.skippedName("czescjestemadas.kmitems.ItemsPlugin#onLoad")
 				.fieldFinalRemove(true)
 				.inline(true)
 				.strings(true)

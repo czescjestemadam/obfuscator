@@ -2,6 +2,7 @@ package czescjestemadas.obfuscator;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.ToString;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class ObfuscatorSettings
 	@Builder.Default
 	private final int methodNameLength = 32;
 
+	@Singular
 	private final List<String> skippedNames;
 
 
