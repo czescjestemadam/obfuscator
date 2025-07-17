@@ -18,7 +18,7 @@ public class Main
 		final ObfuscatorSettings settings = ObfuscatorSettings.builder()
 				.namesCharLimit(127)
 				.skippedName("czescjestemadas.kmitems.ItemsPlugin#onLoad")
-				.packagePrefix("czescjestemadas.")
+				.packagePrefix("czescjestemadas/")
 				.fieldFinalRemove(true)
 				.inline(true)
 				.strings(true)

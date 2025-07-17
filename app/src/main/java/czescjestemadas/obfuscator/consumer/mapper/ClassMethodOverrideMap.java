@@ -3,6 +3,7 @@ package czescjestemadas.obfuscator.consumer.mapper;
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
+import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -16,7 +17,7 @@ public class ClassMethodOverrideMap implements ClassMapper
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
-		if (!settings.getPackagePrefixes().contains(node.name))
+		if (!StrUtil.startsWith(node.name, settings.getPackagePrefixes()))
 			return false;
 
 		for (final MethodNode method : node.methods)

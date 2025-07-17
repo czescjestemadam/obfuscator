@@ -2,6 +2,7 @@ package czescjestemadas.obfuscator.consumer.mapper;
 
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
+import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 
@@ -15,7 +16,7 @@ public class ClassFieldMap implements ClassMapper
 		if (Mappings.isSkipAnnotated(node.invisibleAnnotations))
 			return false;
 
-		if (!settings.getPackagePrefixes().contains(node.name))
+		if (!StrUtil.startsWith(node.name, settings.getPackagePrefixes()))
 			return false;
 
 		for (final FieldNode field : node.fields)

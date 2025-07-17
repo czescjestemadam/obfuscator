@@ -4,6 +4,7 @@ import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
 import czescjestemadas.obfuscator.consumer.transformer.ClassTransformer;
+import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -18,7 +19,7 @@ public class FieldFinalRemoveTransform implements ClassTransformer
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
-		if (!settings.getPackagePrefixes().contains(node.name))
+		if (!StrUtil.startsWith(node.name, settings.getPackagePrefixes()))
 			return false;
 
 		for (FieldNode field : node.fields)

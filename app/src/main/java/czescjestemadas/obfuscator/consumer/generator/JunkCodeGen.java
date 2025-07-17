@@ -3,6 +3,7 @@ package czescjestemadas.obfuscator.consumer.generator;
 import czescjestemadas.obfuscator.Mappings;
 import czescjestemadas.obfuscator.Obfuscator;
 import czescjestemadas.obfuscator.ObfuscatorSettings;
+import czescjestemadas.obfuscator.util.StrUtil;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
@@ -36,7 +37,7 @@ public class JunkCodeGen implements ClassGenerator
 		if (settings.getSkippedNames().contains(node.name))
 			return false;
 
-		if (!settings.getPackagePrefixes().contains(node.name))
+		if (!StrUtil.startsWith(node.name, settings.getPackagePrefixes()))
 			return false;
 
 		appendGeneratedElements(node, settings);

@@ -12,4 +12,15 @@ public abstract class StrUtil
 		final int idx = name.lastIndexOf('/');
 		return idx < 0 ? name : name.substring(0, idx);
 	}
+
+	public static boolean startsWith(String str, Iterable<String> prefixes)
+	{
+		for (final String prefix : prefixes)
+		{
+			if (str.startsWith(prefix))
+				return true;
+		}
+
+		return false;
+	}
 }
